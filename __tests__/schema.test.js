@@ -5,11 +5,10 @@ describe('Schema', () => {
     const schema = new Schema({
       name: {
         type: String,
-        require: true
+        required: true
       },
       age: {
-        type: Number,
-        require: true
+        type: Number
       },
       weight: {
         type: String
@@ -21,12 +20,14 @@ describe('Schema', () => {
       age: 5,
       weight: '20 lbs'
     };
+
     expect(schema.validate(dog)).toEqual({
       name: 'spot',
       age: 5,
       weight: '20 lbs'
     });
   });
+
   it('throws on a bad schema', () => {
     const schema = new Schema({
       name: {
@@ -40,13 +41,12 @@ describe('Schema', () => {
         type: String
       }
     });
-  
+
     const dog = {
       age: 'hi',
       weight: '20 lbs'
     };
-  
+
     expect(() => schema.validate(dog)).toThrowErrorMatchingSnapshot();
   });
-})
-;
+});

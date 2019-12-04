@@ -1,40 +1,73 @@
-const {
-  Validator
-} = require('../lib/Validator');
+const { Validator } = require('../lib/Validator');
 
-const nameValidator = new Validator('name', {
-  type: String,
-  required: true
-});
-  
-const ageValidator = new Validator('age', {
-  type: String,
-  required: true
-});
-  
-const colorValidator = new Validator('color', {
-  type: String,
-  required: true
-});
 
-const dog = {
-  name: 'spot',
-  age: '5',
-  weight: '20 lbs'
-};
+describe('Validator', () => {
+  let validator;
 
-describe('validator module', () => {
-  beforeAll(() => 
-  describe('basic validation', () => {
-    it('properly tells if a value is a validated', () => {
-      expect(nameValidator.validate(dog)).toEqual('spot');
-      expect(ageValidator.validate(dog)).toEqual('5');
-      
-      
+  describe('required fields', () => {
+    beforeAll(() => {
+      validator = new Validator('age', {
+        type: Number,
+        required: true
+      });
     });
-    it('throws correct error', () => {
-      expect(nameValidator.validate(dog)).to;
+    it('returns the field', () => {
+      const dog = {
+        name: 'spot',
+        age: 5,
+        weight: '20 lbs'
+      };
+      expect(validator.validate(dog)).toEqual(5);    
+    });
+
+    it('returns the field cast to type', () => {
+      const dog = {
+        name: 'spot',
+        age: '5',
+        weight: '20 lbs'
+      };
+      expect(validator.validate(dog)).toEqual(5);
+    });
+
+    it('returns the field', () => {
+      const dog = {
+        name: 'spot',
+        weight: '20 lbs',
+      };
+      expect(() => validator.validate(dog)).toThrowErrorMatchingSnapshot();
     });
   });
-})
-;
+  describe('optional fields', () => {
+    beforeAll(()=> {
+      validator = new Validator('age', {
+        type: Number
+      });
+    });
+    it('returns the field', () => {
+      const dog = {
+        name: 'spot',
+        age: 5,
+        weight: '20 lbs'
+      };
+      expect(validator.validate(dog)).toEqual(5);
+    });
+    it('returns the field cast to type', () => {
+      const dog = {
+        name: 'spot',
+        age: '5',
+        weight: '20 lbs'
+      };
+  
+      expect(validator.validate(dog)).toEqual(5);
+    });
+  
+    it('returns the field', () => {
+      const dog = {
+        name: 'spot',
+        weight: '20 lbs'
+      };
+  
+      expect(validator.validate(dog)).toBeNull();
+    });
+  });
+});
